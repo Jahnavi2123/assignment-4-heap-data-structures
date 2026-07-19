@@ -122,31 +122,41 @@ The running time of Heapsort was compared with Quicksort and Merge Sort using:
 - Sorted inputs
 - Reverse sorted inputs
 
-## Sample Benchmark Results
+## Benchmark Results
 
-| Size | Distribution | Heapsort | Quicksort | Merge Sort |
-|------|--------------|-----------|------------|------------|
-|100|Random|0.0001|0.0001|0.0001|
-|500|Random|0.0004|0.0003|0.0004|
-|1000|Random|0.0010|0.0008|0.0009|
-|1000|Sorted|0.0011|0.0009|0.0010|
-|1000|Reverse|0.0012|0.0009|0.0011|
+The algorithms were tested using random, sorted, and reverse-sorted inputs. Each result represents the median running time across multiple trials.
 
-*(Actual values may vary slightly depending on the machine and random input generation.)*
+| Size | Distribution | Heapsort (sec) | Quicksort (sec) | Merge Sort (sec) |
+|---:|---|---:|---:|---:|
+| 100 | Random | 0.000033 | 0.000032 | 0.000042 |
+| 100 | Sorted | 0.000033 | 0.000028 | 0.000032 |
+| 100 | Reverse | 0.000030 | 0.000037 | 0.000034 |
+| 500 | Random | 0.000236 | 0.000202 | 0.000241 |
+| 500 | Sorted | 0.000220 | 0.000200 | 0.000171 |
+| 500 | Reverse | 0.000212 | 0.000190 | 0.000174 |
+| 1000 | Random | 0.000505 | 0.000443 | 0.000567 |
+| 1000 | Sorted | 0.000521 | 0.000412 | 0.000369 |
+| 1000 | Reverse | 0.000447 | 0.000407 | 0.000381 |
+| 2000 | Random | 0.001157 | 0.000962 | 0.003588 |
+| 2000 | Sorted | 0.001364 | 0.000926 | 0.000799 |
+| 2000 | Reverse | 0.001052 | 0.000922 | 0.000800 |
+| 5000 | Random | 0.003355 | 0.002718 | 0.003182 |
+| 5000 | Sorted | 0.003315 | 0.002416 | 0.002039 |
+| 5000 | Reverse | 0.003005 | 0.002472 | 0.002168 |
 
 ---
 
-# Discussion of Results
+## Discussion of Sorting Results
 
-The experimental results were generally consistent with theoretical expectations.
+The benchmark results were generally consistent with the expected time complexities. All three algorithms handled the tested input sizes efficiently, and their running times increased gradually as the input size increased.
 
-Quicksort often performed slightly faster on random inputs because of lower constant factors. However, its performance can depend on pivot selection.
+Quicksort was the fastest algorithm in most of the tests. The implementation uses random pivot selection and three-way partitioning, which reduces the chance of creating poor partitions on sorted or reverse-sorted inputs. Because of this, Quicksort remained stable across all three input distributions.
 
-Merge Sort showed very stable performance and remained close to its expected \(O(n\log n)\) behavior.
+Heapsort also showed consistent performance. Its running time did not change significantly based on whether the input was random, sorted, or reverse sorted. This supports the theoretical analysis that Heapsort runs in \(O(n \log n)\) in the best, average, and worst cases. It was slightly slower than Quicksort in most tests because heap construction and repeated heapify operations involve additional comparisons and swaps.
 
-Heapsort also maintained stable performance across different input distributions. Although it was sometimes slightly slower than Quicksort, its running time remained predictable regardless of whether the input was sorted, reverse sorted, or random.
+Merge Sort performed well for sorted and reverse-sorted inputs. For random input of size 2,000, its measured time was noticeably higher than the surrounding results. This appears to be a timing variation rather than a change in the algorithm's complexity, since its performance returned to the expected range at size 5,000. Runtime measurements can be affected by Python interpreter activity, memory allocation, and background system processes.
 
-Another advantage of Heapsort is its low memory usage. Unlike Merge Sort, which requires additional arrays during merging, Heapsort performs sorting in place.
+The results also show that the fastest algorithm can depend on both the implementation and the input. Quicksort had the lowest running time in most cases, Merge Sort performed especially well on ordered inputs, and Heapsort provided the most predictable performance across input distributions.
 
 ---
 
@@ -262,13 +272,36 @@ The scheduler is non-preemptive, meaning that once a task starts execution, it i
 
 ---
 
-# Scheduling Results Discussion
+## Priority Queue Test Results
 
-The heap-based priority queue efficiently handled task scheduling operations.
+The priority queue was tested using three tasks with different priorities and arrival times.
 
-Insertion and removal operations remained logarithmic even as the number of tasks increased.
+```text
+Highest priority: Task(id=2, priority=5, arrival=1, deadline=5, duration=1)
+After priority update: Task(id=1, priority=6, arrival=0, deadline=8, duration=1)
+Extracted: Task(id=1, priority=6, arrival=0, deadline=8, duration=1)
+Extracted: Task(id=2, priority=5, arrival=1, deadline=5, duration=1)
+Extracted: Task(id=3, priority=2, arrival=2, deadline=10, duration=1)
 
-The simulation demonstrates why heaps are widely used in operating systems, CPU scheduling, event-driven simulations, and job processing systems.
+
+## Add this scheduler results section
+
+```markdown
+## Scheduler Results
+
+| Task | Priority | Arrival | Start | Finish | Waiting Time | Deadline | Met Deadline |
+|---:|---:|---:|---:|---:|---:|---:|---|
+| 1 | 3 | 0 | 0 | 3 | 0 | 8 | Yes |
+| 2 | 5 | 1 | 3 | 5 | 2 | 6 | Yes |
+| 4 | 4 | 4 | 5 | 7 | 1 | 10 | Yes |
+| 3 | 2 | 2 | 7 | 11 | 5 | 12 | Yes |
+| 5 | 1 | 5 | 11 | 12 | 6 | 15 | Yes |
+
+The average waiting time was 2.80 time units, and all five tasks completed before their deadlines.
+
+The scheduler selected the highest-priority task among the tasks that had already arrived. Task 1 started first because it was the only available task at time 0. Task 2 had a higher priority, but it arrived after Task 1 had already started. Since the scheduler is non-preemptive, Task 1 was allowed to finish before Task 2 was selected.
+
+Task 4 was processed before Task 3 because it had a higher priority, even though Task 3 arrived earlier. Task 5 had the lowest priority and therefore experienced the longest waiting time. These results show that priority-based scheduling can improve the response time of important tasks, but lower-priority tasks may wait longer.
 
 ---
 

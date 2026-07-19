@@ -88,17 +88,14 @@ python3 scheduler.py
 
 ---
 
-# Summary of Findings
+## Summary of Findings
 
-1. Heapsort maintained stable performance across all input distributions.
-
-2. Quicksort generally performed very well on random data but its performance depended on pivot selection.
-
-3. Merge Sort also showed stable performance and produced running times close to Heapsort.
-
-4. Heapsort required less auxiliary memory than Merge Sort because it performs sorting in place.
-
-5. Binary heaps provide an efficient implementation of priority queues, supporting insertion and deletion operations in logarithmic time.
+- Quicksort produced the fastest running time in most benchmark cases.
+- Heapsort remained stable across random, sorted, and reverse-sorted inputs.
+- Merge Sort performed especially well on sorted and reverse-sorted inputs.
+- The priority queue correctly reordered tasks after a priority update.
+- The scheduler completed all five tasks before their deadlines.
+- The average scheduler waiting time was 2.80 time units.
 
 ---
 
